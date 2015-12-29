@@ -12,13 +12,12 @@ RUN useradd -d "$JENKINS_HOME" -u 1000 -m -s /bin/bash jenkins
 
 # Jenkins home directory is a volume, so configuration and build history 
 # can be persisted and survive image upgrades
-VOLUME /var/jenkins_home
+# VOLUME /var/jenkins_home
 
 # `/usr/share/jenkins/ref/` contains all reference configuration we want 
 # to set on a fresh new installation. Use it to bundle additional plugins 
 # or config file with your custom jenkins Docker image.
 RUN mkdir -p /usr/share/jenkins/ref/init.groovy.d
-
 ENV TINI_SHA 066ad710107dc7ee05d3aa6e4974f01dc98f3888
 
 # Use tini as subreaper in Docker container to adopt zombie processes 
@@ -48,6 +47,7 @@ EXPOSE 50000
 ENV COPY_REFERENCE_FILE_LOG $JENKINS_HOME/copy_reference_file.log
 
 USER jenkins
+WORKDIR $JENKINS_HOME
 
 COPY jenkins.sh /usr/local/bin/jenkins.sh
 ENTRYPOINT ["/bin/tini", "--", "/usr/local/bin/jenkins.sh"]
@@ -59,3 +59,7 @@ RUN /usr/local/bin/plugins.sh /tmp/plugins.txt
 # corresponding jenkins global configuration
 COPY hudson.tasks.Maven.xml /var/jenkins_home/hudson.tasks.Maven.xml
 COPY config.xml /var/jenkins_home/config.xml
+# jobs
+COPY jobs.sh /usr/local/bin/jobs.sh
+COPY jobs.tar /tmp/jobs.tar
+RUN /usr/local/bin/jobs.sh
