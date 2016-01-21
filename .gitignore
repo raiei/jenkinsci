@@ -1,2 +1,3 @@
 build-pet-clinic-mysql*
-*.bak
+*.bak*
+hostip.sh
