@@ -1,4 +1,4 @@
-My customization of Jenkins Official docker image.  
+My customization of Jenkins Official docker image https://github.com/jenkinsci/docker.git.  
 
 What added:
 - Plugins I need
